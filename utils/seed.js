@@ -1,8 +1,8 @@
 // utils/seed.js
 const mongoose = require('mongoose');
-const { User, Thought, ReactionSchema } = require('../models');
+const { User, Thought, Reaction } = require('../models');
 const { users, thoughts, reactions } = require('./data');
-const seedDatabase = require('./seed');
+
 
 
 mongoose.connect('mongodb://localhost/social-network-db', {
@@ -26,11 +26,17 @@ async function seedDatabase() {
     const createdThoughts = await Thought.insertMany(thoughts);
 
     for (const reaction of reactions) {
-      reaction.thoughtId = createdThoughts.find(
+      const thought = createdThoughts.find(
         (thought) => thought.username === reaction.username
-      )._id;
+      );
+      const reactionData = {
+        reactionBody: reaction.reactionBody,
+        username: reaction.username,
+        createdAt: new Date(), // This should be the actual timestamp
+      };
+      thought.reactions.push(reactionData);
+      await thought.save();
     }
-
     await Thought.updateMany({}, { $push: { reactions: reactions } });
 
     console.log('Database seeded successfully');

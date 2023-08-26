@@ -1,5 +1,6 @@
 // models/reactions.js
 const mongoose = require('mongoose');
+const formatDate = require('../utils/dateUtils');
 
 const reactionSchema = new mongoose.Schema({
   reactionId: {
@@ -20,11 +21,7 @@ const reactionSchema = new mongoose.Schema({
     default: Date.now,
     get: (timestamp) => formatDate(timestamp), // Format timestamp
   },
-});
+}, { toJSON: { getters: true } } );
 
-// Function to format timestamp
-function formatDate(timestamp) {
-  return new Date(timestamp).toISOString();
-}
 
 module.exports = reactionSchema;

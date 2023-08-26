@@ -1,10 +1,10 @@
 // controllers/thoughtController.js
-const { Thought, User } = require('../models');
+const { Thought, User, Reaction } = require('../models');
 
 const thoughtController = {
   getAllThoughts(req, res) {
     Thought.find({})
-      .populate('reactions')
+      // .populate('reactions')
       .then((thoughts) => res.json(thoughts))
       .catch((err) => res.status(500).json(err));
   },
@@ -53,33 +53,37 @@ const thoughtController = {
   },
 
   createReaction(req, res) {
-    Reaction.create(req.body)
-      .then((reaction) => {
-        // Push the created reaction's _id to the associated thought's reactions array
-        return Thought.findOneAndUpdate(
-          { _id: req.params.thoughtId },
-          { $push: { reactions: reaction._id } },
-          { new: true }
-        );
-      })
+    // Reaction.create(req.body)
+    //   .then((reaction) => {
+    //     // Push the created reaction's _id to the associated thought's reactions array
+    //     return Thought.findOneAndUpdate(
+    //       { _id: req.params.thoughtId },
+    //       { $push: { reactions: reaction._id } },
+    //       { new: true }
+    //     );
+    //   })
+    Thought.findOneAndUpdate({_id: req.params.thoughtId},{$addToSet: {reactions : req.body}}, {new: true})
       .then(() => res.json({ message: 'Reaction created and associated with thought' }))
       .catch((err) => res.status(400).json(err));
   },
 
-  deleteReaction(req, res) {
-    Reaction.findByIdAndDelete(req.params.reactionId)
-      .then((reaction) => {
-        if (!reaction) {
-          return res.status(404).json({ message: 'Reaction not found' });
-        }
-        return Thought.findOneAndUpdate(
-          { _id: req.params.thoughtId },
-          { $pull: { reactions: reaction._id } },
-          { new: true }
-        );
-      })
-      .then(() => res.json({ message: 'Reaction deleted and disassociated from thought' }))
-      .catch((err) => res.status(500).json(err));
+  async deleteReaction(req, res) {
+    try {
+        // finds thought by id and removes reaction
+      const thought = await Thought.findOneAndUpdate(
+        { _id: req.params.thoughtId },
+        { $pull: { reactions: { reactionId: req.params.reactionId } } },
+        { runValidators: true, new: true }
+      );
+
+      if (!thought) {
+        return res.status(404).json({ message: 'No thought with this ID!' });
+      }
+
+      res.json({ message: 'Reaction successfully deleted!', thought });
+    } catch (err) {
+      res.status(500).json(err);
+    }
   },
 };
 
