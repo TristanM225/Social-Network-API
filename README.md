@@ -23,7 +23,8 @@ With This Custom API we can create users, thoughts and reactions to their though
 ![Screenshot of Set up](assets/NOSQL_Setup.JPG)
 
 Link to a walkthrough video!
-[Uploading NetworkAPI.webm…]()
+[NetworkAPI.webm](https://github.com/TristanM225/Social-Network-API/assets/126945628/a13d0fdf-91c7-4f13-8e38-bd35249650f8)
+
 
  
 ## Setup
