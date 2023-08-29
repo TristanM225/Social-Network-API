@@ -18,10 +18,13 @@ With This Custom API we can create users, thoughts and reactions to their though
 
 
 ## Screenshots / Links
-![Screenshot of project](assets\NOSQL_project_image.JPG)
-![Screenshot of Set up](assets\NOSQL_Setup.JPG)
+![Screenshot of project](assets/NOSQL_project_image.JPG)
+
+![Screenshot of Set up](assets/NOSQL_Setup.JPG)
 
 Link to a walkthrough video!
+[Uploading NetworkAPI.webm…]()
+
  
 ## Setup
 - Set up requires you to npm i
